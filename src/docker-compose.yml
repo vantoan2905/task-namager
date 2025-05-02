@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  node-app:
+    build: .
+    container_name: node-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mariadb
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - APP_NAME=${APP_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
