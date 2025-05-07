@@ -16,6 +16,9 @@ services:
       - DB_NAME=${DB_NAME}
       - APP_NAME=${APP_NAME}
       - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_ACCOUNT=${ADMIN_ACCOUNT}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+
 
   mariadb:
     image: mariadb:latest

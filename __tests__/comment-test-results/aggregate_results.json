@@ -1,0 +1,115 @@
+[
+  {
+    "api": "createComment",
+    "input": {
+      "taskId": 42,
+      "username": "alice",
+      "messege": "Hello"
+    },
+    "result": {
+      "id": 1,
+      "taskId": 42,
+      "username": "alice",
+      "messege": "Hello"
+    },
+    "status": "good"
+  },
+  {
+    "api": "createComment",
+    "input": {
+      "taskId": 10,
+      "username": "bob"
+    },
+    "status": "missing"
+  },
+  {
+    "api": "createComment",
+    "input": {
+      "taskId": -1,
+      "username": "charlie",
+      "messege": "Oops"
+    },
+    "status": "bad"
+  },
+  {
+    "api": "getCommentsByTask",
+    "input": {
+      "taskId": 7
+    },
+    "result": [
+      {
+        "id": 1,
+        "taskId": 7,
+        "username": "bob",
+        "messege": "Test"
+      }
+    ],
+    "status": "good"
+  },
+  {
+    "api": "getCommentsByTask",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "getCommentsByTask",
+    "input": {
+      "taskId": -5
+    },
+    "status": "bad"
+  },
+  {
+    "api": "updateComment",
+    "input": {
+      "commentid": 5,
+      "username": "charlie",
+      "messege": "Updated",
+      "taskId": 3
+    },
+    "result": {
+      "affected": 1
+    },
+    "status": "good"
+  },
+  {
+    "api": "updateComment",
+    "input": {
+      "username": "dave",
+      "messege": "Hi",
+      "taskId": 2
+    },
+    "status": "missing"
+  },
+  {
+    "api": "updateComment",
+    "input": {
+      "commentid": -2,
+      "username": "eve",
+      "messege": "Error",
+      "taskId": 1
+    },
+    "status": "bad"
+  },
+  {
+    "api": "deleteComment",
+    "input": {
+      "commentId": 9
+    },
+    "result": {
+      "affected": 1
+    },
+    "status": "good"
+  },
+  {
+    "api": "deleteComment",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "deleteComment",
+    "input": {
+      "commentId": -10
+    },
+    "status": "bad"
+  }
+]

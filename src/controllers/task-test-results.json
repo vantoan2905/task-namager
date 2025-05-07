@@ -1,0 +1,291 @@
+[
+  {
+    "name": "createTask_valid",
+    "input": {
+      "username": "tester",
+      "dto": {
+        "name": "Complete docs",
+        "type_id": 1,
+        "status_id": 2,
+        "priority_id": 3,
+        "label_id": 1,
+        "description": "Documentation for API",
+        "time_start": "2025-05-06T09:18:06.280Z"
+      }
+    },
+    "output": {
+      "success": true
+    },
+    "passed": true
+  },
+  {
+    "name": "createTask_invalid",
+    "input": {
+      "name": "Complete docs",
+      "type_id": "one",
+      "status_id": 2,
+      "priority_id": 3,
+      "label_id": 1,
+      "description": "Documentation for API",
+      "time_start": "2025-05-06T09:18:06.280Z"
+    },
+    "output": [
+      {
+        "target": {
+          "name": "Complete docs",
+          "type_id": "one",
+          "status_id": 2,
+          "priority_id": 3,
+          "label_id": 1,
+          "description": "Documentation for API",
+          "time_start": "2025-05-06T09:18:06.280Z"
+        },
+        "value": "one",
+        "property": "type_id",
+        "children": [],
+        "constraints": {
+          "isInt": "type_id must be an integer number"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "createTask_missing",
+    "input": {
+      "status_id": 2,
+      "priority_id": 3,
+      "label_id": 1,
+      "description": "Documentation for API",
+      "time_start": "2025-05-06T09:18:06.280Z"
+    },
+    "output": [
+      {
+        "target": {
+          "status_id": 2,
+          "priority_id": 3,
+          "label_id": 1,
+          "description": "Documentation for API",
+          "time_start": "2025-05-06T09:18:06.280Z"
+        },
+        "property": "name",
+        "children": [],
+        "constraints": {
+          "isString": "name must be a string"
+        }
+      },
+      {
+        "target": {
+          "status_id": 2,
+          "priority_id": 3,
+          "label_id": 1,
+          "description": "Documentation for API",
+          "time_start": "2025-05-06T09:18:06.280Z"
+        },
+        "property": "type_id",
+        "children": [],
+        "constraints": {
+          "isInt": "type_id must be an integer number"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "getAllTasks_valid",
+    "input": [
+      "user1"
+    ],
+    "output": [
+      "t1",
+      "t2"
+    ],
+    "passed": true
+  },
+  {
+    "name": "getAllTasks_invalid",
+    "input": [
+      "user1"
+    ],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getAllTasks_missing",
+    "input": [
+      null
+    ],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "deleteTask_valid",
+    "input": [
+      "abc123"
+    ],
+    "output": {
+      "deleted": true
+    },
+    "passed": true
+  },
+  {
+    "name": "deleteTask_invalid",
+    "input": [
+      "abc123"
+    ],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "deleteTask_missing",
+    "input": [
+      null
+    ],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "updateTask_valid",
+    "input": [
+      "abc123",
+      {
+        "name": "New name"
+      }
+    ],
+    "output": {
+      "updated": true
+    },
+    "passed": true
+  },
+  {
+    "name": "updateTask_invalid",
+    "input": [
+      "abc123",
+      {
+        "name": "New name"
+      }
+    ],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "updateTask_missing",
+    "input": [
+      null,
+      null
+    ],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "getTaskById_valid",
+    "input": [
+      "abc123"
+    ],
+    "output": {
+      "id": "abc123",
+      "name": "T"
+    },
+    "passed": true
+  },
+  {
+    "name": "getTaskById_invalid",
+    "input": [
+      "abc123"
+    ],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getTaskById_missing",
+    "input": [
+      null
+    ],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "getTypeTask_valid",
+    "input": [],
+    "output": [
+      "EPIC",
+      "BUG"
+    ],
+    "passed": true
+  },
+  {
+    "name": "getTypeTask_invalid",
+    "input": [],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getTypeTask_missing",
+    "input": [],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "getStatusTask_valid",
+    "input": [],
+    "output": [
+      "New",
+      "In Progress"
+    ],
+    "passed": true
+  },
+  {
+    "name": "getStatusTask_invalid",
+    "input": [],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getStatusTask_missing",
+    "input": [],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "getPriorityTask_valid",
+    "input": [],
+    "output": [
+      "Low",
+      "High"
+    ],
+    "passed": true
+  },
+  {
+    "name": "getPriorityTask_invalid",
+    "input": [],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getPriorityTask_missing",
+    "input": [],
+    "output": "Missing fields",
+    "passed": true
+  },
+  {
+    "name": "getLabelTask_valid",
+    "input": [],
+    "output": [
+      "urgent",
+      "optional"
+    ],
+    "passed": true
+  },
+  {
+    "name": "getLabelTask_invalid",
+    "input": [],
+    "output": "Invalid input",
+    "passed": true
+  },
+  {
+    "name": "getLabelTask_missing",
+    "input": [],
+    "output": "Missing fields",
+    "passed": true
+  }
+]

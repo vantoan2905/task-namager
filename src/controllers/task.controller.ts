@@ -3,9 +3,10 @@ import { CreateTaskDto } from 'src/dto/task/create-task.dto';
 import { TaskManagerService } from 'src/services/task.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Public } from 'src/middlewares/public-flag';
-
+import { CreateTaskLabelDto } from 'src/dto/task/create-task-label.dto';
+import { Request } from '@nestjs/common';
 @ApiTags('Tasks')
-@Controller('tasks-manager')
+@Controller('tasks')
 export class TaskController {
   constructor(private readonly taskManagerService: TaskManagerService) {}
   // ------------------------------------------------------------------------------
@@ -20,13 +21,13 @@ export class TaskController {
   // ------------------------------------------------------------------------------
   // Get all tasks
   // ------------------------------------------------------------------------------
-  @Get('Alltasks/:username')
+  @Get('alltasks/:username')
+  // @Public()
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get all tasks' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getAllTasks(@Param('username') username: string) {
-      
-      const result = await this.taskManagerService.getAllTasks(username);
+  async getAllTasks(@Param('username') username: string, @Request() req) {
+      const result = await this.taskManagerService.getAllTasks(req.user.username);
       return result;
   
   }
@@ -37,7 +38,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Delete a task by ID' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async deleteTask(@Param('id') id: string) {
+  async deleteTask(@Param('id') id: string, @Request() req) {
      const result = await this.taskManagerService.deleteTask(id);
      return result;
   }
@@ -48,7 +49,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Update a task by ID' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async updateTask(@Param('id') id: string, @Body() updateTaskDto: any) {
+  async updateTask(@Param('id') id: string, @Body() updateTaskDto: any, @Request() req) {
     const result = await this.taskManagerService.updateTask(id, updateTaskDto);
     return result;
   }
@@ -59,7 +60,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get a task by ID' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getTaskById(@Param('id') id: string) {
+  async getTaskById(@Param('id') id: string,  @Request() req) {
     const result = await this.taskManagerService.getTaskById(id);
     return result;
   }
@@ -70,7 +71,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get type of task' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getTypeTask() {
+  async getTypeTask(  @Request() req) {
     const result = await this.taskManagerService.getTypeTask();
    return result;
   
@@ -82,7 +83,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get status of task' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getStatusTask() {
+  async getStatusTask(  @Request() req) {
   const result = await this.taskManagerService.getStatusTask();
   return result;
   
@@ -94,7 +95,7 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get priority of task' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getPriorityTask() {
+  async getPriorityTask(  @Request() req) {
   const result = await this.taskManagerService.getPriorityTask();
   return result;
   
@@ -106,9 +107,21 @@ export class TaskController {
   @ApiBearerAuth('access-token') 
   @ApiOperation({ summary: 'Get label of task' })
   @ApiResponse({ status: 200, description: 'Success' })
-  async getLabelTask() {
+  async getLabelTask(  @Request() req) {
       const result = await this.taskManagerService.getLabelTask();
       return result;
       
+  }
+
+  // -------------------------------------------------------------------------------
+  // create task label
+  // -------------------------------------------------------------------------------
+  @Post('createTaskLabel')
+  @ApiBearerAuth('access-token') 
+  @ApiOperation({ summary: 'Create task label' })
+  @ApiResponse({ status: 200, description: 'Success' })
+  async createTaskLabel(@Body() createTaskLabelDto: CreateTaskLabelDto, @Request() req) {
+    const result = await this.taskManagerService.createTaskLabel(createTaskLabelDto);
+    return result;
   }
 }

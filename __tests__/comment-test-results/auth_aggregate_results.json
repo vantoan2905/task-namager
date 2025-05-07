@@ -1,0 +1,150 @@
+[
+  {
+    "api": "register",
+    "input": {
+      "email": "test@example.com",
+      "password": "pass123",
+      "username": "testuser"
+    },
+    "result": {
+      "id": 1,
+      "email": "test@example.com",
+      "password": "pass123",
+      "username": "testuser"
+    },
+    "status": "good"
+  },
+  {
+    "api": "register",
+    "input": {
+      "email": ""
+    },
+    "status": "missing"
+  },
+  {
+    "api": "register",
+    "input": {
+      "email": "bad",
+      "password": "123",
+      "username": "baduser"
+    },
+    "status": "bad"
+  },
+  {
+    "api": "login",
+    "input": {
+      "user": {
+        "id": 1,
+        "email": "user@example.com"
+      }
+    },
+    "result": {
+      "accessToken": "token"
+    },
+    "status": "good"
+  },
+  {
+    "api": "login",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "login",
+    "input": {
+      "user": {
+        "id": 1
+      }
+    },
+    "status": "bad"
+  },
+  {
+    "api": "forgotPassword",
+    "input": {
+      "email": "user2@example.com"
+    },
+    "result": {
+      "message": "OTP sent"
+    },
+    "status": "good"
+  },
+  {
+    "api": "forgotPassword",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "forgotPassword",
+    "input": {
+      "email": "invalid"
+    },
+    "status": "bad"
+  },
+  {
+    "api": "verifyOtp",
+    "input": {
+      "email": "user3@example.com",
+      "otp": "1234",
+      "new_password": "newpass"
+    },
+    "result": {
+      "message": "Password reset"
+    },
+    "status": "good"
+  },
+  {
+    "api": "verifyOtp",
+    "input": {
+      "email": "user@example.com"
+    },
+    "status": "missing"
+  },
+  {
+    "api": "verifyOtp",
+    "input": {
+      "email": "user3@example.com",
+      "otp": "0000",
+      "new_password": "newpass"
+    },
+    "status": "bad"
+  },
+  {
+    "api": "refreshToken",
+    "input": {},
+    "result": {
+      "accessToken": "newtoken"
+    },
+    "status": "good"
+  },
+  {
+    "api": "refreshToken",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "refreshToken",
+    "input": {},
+    "status": "bad"
+  },
+  {
+    "api": "logout",
+    "input": {
+      "refreshToken": "refresh456"
+    },
+    "result": {
+      "message": "Logged out"
+    },
+    "status": "good"
+  },
+  {
+    "api": "logout",
+    "input": {},
+    "status": "missing"
+  },
+  {
+    "api": "logout",
+    "input": {
+      "refreshToken": "invalid"
+    },
+    "status": "bad"
+  }
+]

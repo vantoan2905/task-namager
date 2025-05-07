@@ -38,7 +38,7 @@ export class CreateTaskDto {
   label_id: number;
   @ApiProperty({
     description: 'The list of labels of the task (e.g., 1:bug, 2:feature, 3:improvement)',
-    example: '[1,2,3]',
+    example: '[1]',
   })
 
   @ApiProperty({

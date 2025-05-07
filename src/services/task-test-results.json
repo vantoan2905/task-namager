@@ -1,0 +1,191 @@
+[
+  {
+    "name": "createTask_missing_username",
+    "input": {
+      "username": "",
+      "dto": {
+        "name": "T1",
+        "description": "D1",
+        "type_id": 1,
+        "status_id": 1,
+        "priority_id": 1,
+        "label_id": 1,
+        "time_start": "2025-05-02T06:42:55.182Z",
+        "time_stop": "2025-05-02T06:42:55.182Z"
+      }
+    },
+    "output": "User not found",
+    "passed": true
+  },
+  {
+    "name": "createTask_user_not_found",
+    "input": {
+      "username": "nouser",
+      "dto": {
+        "name": "T1",
+        "description": "D1",
+        "type_id": 1,
+        "status_id": 1,
+        "priority_id": 1,
+        "label_id": 1,
+        "time_start": "2025-05-02T06:42:55.182Z",
+        "time_stop": "2025-05-02T06:42:55.182Z"
+      }
+    },
+    "output": "User not found",
+    "passed": true
+  },
+  {
+    "name": "createTask_success",
+    "input": {
+      "username": "u",
+      "dto": {
+        "name": "T1",
+        "description": "D1",
+        "type_id": 1,
+        "status_id": 1,
+        "priority_id": 1,
+        "label_id": 1,
+        "time_start": "2025-05-02T06:42:55.182Z",
+        "time_stop": "2025-05-02T06:42:55.182Z"
+      }
+    },
+    "output": {
+      "success": true,
+      "data": "Task created successfully with ID: 42",
+      "message": "Thành công",
+      "errors": []
+    },
+    "passed": true
+  },
+  {
+    "name": "getAllTasks_missing_username",
+    "input": "",
+    "output": null,
+    "passed": false
+  },
+  {
+    "name": "getAllTasks_user_not_found",
+    "input": "nouser",
+    "output": "User not found",
+    "passed": true
+  },
+  {
+    "name": "getAllTasks_success",
+    "input": "u",
+    "output": {
+      "success": true,
+      "data": {
+        "tasks": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      "message": "Thành công",
+      "errors": []
+    },
+    "passed": true
+  },
+  {
+    "name": "deleteTask_missing_id",
+    "input": "",
+    "output": "Task not found",
+    "passed": true
+  },
+  {
+    "name": "deleteTask_not_found",
+    "input": "99",
+    "output": "Task not found",
+    "passed": true
+  },
+  {
+    "name": "deleteTask_success",
+    "input": "3",
+    "output": {
+      "success": true,
+      "data": "Task deleted successfully with ID: 3",
+      "message": "Thành công",
+      "errors": []
+    },
+    "passed": true
+  },
+  {
+    "name": "updateTask_missing_id",
+    "input": {
+      "id": "",
+      "dto": {
+        "name": "U1",
+        "description": "D1",
+        "time_start": "2025-05-02T06:42:55.183Z",
+        "time_stop": "2025-05-02T06:42:55.183Z"
+      }
+    },
+    "output": null,
+    "passed": false
+  },
+  {
+    "name": "updateTask_not_found",
+    "input": {
+      "id": "50",
+      "dto": {
+        "name": "U1",
+        "description": "D1",
+        "time_start": "2025-05-02T06:42:55.183Z",
+        "time_stop": "2025-05-02T06:42:55.183Z"
+      }
+    },
+    "output": "Task not found",
+    "passed": true
+  },
+  {
+    "name": "updateTask_success",
+    "input": {
+      "id": "7",
+      "dto": {
+        "name": "U1",
+        "description": "D1",
+        "time_start": "2025-05-02T06:42:55.183Z",
+        "time_stop": "2025-05-02T06:42:55.183Z"
+      }
+    },
+    "output": {
+      "success": true,
+      "data": "Task updated successfully with ID: 7",
+      "message": "Thành công",
+      "errors": []
+    },
+    "passed": true
+  },
+  {
+    "name": "getTaskById_missing_id",
+    "input": "",
+    "output": null,
+    "passed": false
+  },
+  {
+    "name": "getTaskById_not_found",
+    "input": "123",
+    "output": "Task not found",
+    "passed": true
+  },
+  {
+    "name": "getTaskById_success",
+    "input": "8",
+    "output": {
+      "success": true,
+      "data": {
+        "task": {
+          "id": 8,
+          "name": "X"
+        }
+      },
+      "message": "Thành công",
+      "errors": []
+    },
+    "passed": true
+  }
+]

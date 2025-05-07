@@ -5,12 +5,12 @@ import { RegisterDto } from '../dto/user/register.dto';
 import { LoginDto } from '../dto/user/login.dto';
 import { ForgotPasswordDto } from '../dto/user/forgot-password.dto';
 import { VerifyOtpDto } from '../dto/user/verify-otp.dto';
-import { ResetPasswordDto } from '../dto/user/reset-password.dto';
+// import { ResetPasswordDto } from '../dto/user/reset-password.dto';
 import { RefreshTokenDto } from '../dto/user/refresh-token.dto';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from 'src/middlewares/local-auth.guard';
 // import { JwtAuthGuard } from 'src/middlewares/jwtAuthGuard';
-import { JwtAuthGuard } from 'src/middlewares/jwt-auth.guard';
+// import { JwtAuthGuard } from 'src/middlewares/jwt-auth.guard';
 import { Public } from 'src/middlewares/public-flag';
 
 @ApiTags('Auth') 
@@ -21,7 +21,6 @@ export class AuthController {
   // register
   // --------------------------------------------------------------------------------------------------------------
   @Post('register')
-  // @UseGuards(JwtAuthGuard)
   @Public()
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User registered successfully' })
@@ -40,7 +39,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Login failed' })
-  async login( @Request() req) {
+  async login( @Request() req, @Body() loginDto: LoginDto) {
     const result = await this.UserService.login(req.user);
 
     return result;

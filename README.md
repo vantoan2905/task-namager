@@ -94,7 +94,7 @@ docker run -d \
   --network app-network \
   --env-file .env \
   -p 3000:3000 \
-  my-nest-app
+  nestjs-app
 
 ```
 
@@ -102,6 +102,28 @@ docker run -d \
 
 ```bash
 docker logs -f nestjs-app
+```
+### Setup file .env
+```bash
+    PORT=
+    DB_HOST=
+    # runwith docker
+    # DB_HOST=mariadb
+    DB_PORT=
+    DB_USER=
+    DB_PASSWORD=
+    DB_NAME=
+
+    APP_NAME=
+    JWT_SECRET=
+
+    JWT_ACCESS_TOKEN_EXPIRED=
+
+
+    ADMIN_ACCOUNT=
+    ADMIN_PASSWORD=
+
+
 ```
 
 

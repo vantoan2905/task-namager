@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { Session } from './session.model';
 import { VerificationCode } from './verification-code.model';
 import { Task } from './task.model'; // Import Task entity
+import { Comment } from './comment.model';
 
 @Entity('users')
 export class User {
@@ -30,6 +31,9 @@ export class User {
   @OneToMany(() => VerificationCode, (code) => code.user)
   verificationCodes: VerificationCode[];
 
-  @OneToMany(() => Task, (task) => task.assigned_user) // Thêm mối quan hệ với Task
+  @OneToMany(() => Task, (task) => task.assigned_user) 
   tasks: Task[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

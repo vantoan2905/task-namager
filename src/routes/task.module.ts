@@ -11,6 +11,10 @@ import { TaskController } from '../controllers/task.controller';
 import { TaskManagerService } from '../services/task.service';
 import { SessionRepository } from 'src/repositories/session.repository';
 import { AuthModule } from './auth.module';
+import { Comment } from 'src/models/comment.model';
+import { CommentController } from 'src/controllers/comment.controller';
+import { CommentService } from 'src/services/comment.service';
+
 
 @Module({
   imports: [
@@ -23,11 +27,12 @@ import { AuthModule } from './auth.module';
       Session,
       User,
       SessionRepository,
+      Comment
     ]),
     forwardRef(() => AuthModule),  
   ],
-  controllers: [TaskController],
-  providers: [TaskManagerService],
+  controllers: [TaskController, CommentController],
+  providers: [TaskManagerService, CommentService],
   exports: [TaskManagerService],
 })
 export class TaskModule {}

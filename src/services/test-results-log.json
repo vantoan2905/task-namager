@@ -1,0 +1,159 @@
+[
+  {
+    "name": "register_missing",
+    "input": {
+      "username": "",
+      "email": "",
+      "password": ""
+    },
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "Input cannot be null",
+      "errors": []
+    }
+  },
+  {
+    "name": "register_existing_email",
+    "input": {
+      "username": "u",
+      "email": "e@mail.com",
+      "password": "p"
+    },
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "User already exists",
+      "errors": [
+        "u"
+      ]
+    }
+  },
+  {
+    "name": "register_existing_username",
+    "input": {
+      "username": "u",
+      "email": "e@mail.com",
+      "password": "p"
+    },
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "User already exists",
+      "errors": [
+        "u"
+      ]
+    }
+  },
+  {
+    "name": "register_success",
+    "input": {
+      "username": "new",
+      "email": "new@mail.com",
+      "password": "pass123"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "username": "new"
+      },
+      "message": "User registered successfully",
+      "errors": []
+    }
+  },
+  {
+    "name": "validateUser_not_found",
+    "input": {
+      "email": "x@mail.com",
+      "password": "pw"
+    },
+    "output": null
+  },
+  {
+    "name": "validateUser_mismatch",
+    "input": {
+      "email": "x@mail.com",
+      "password": "pw"
+    },
+    "output": null
+  },
+  {
+    "name": "validateUser_success",
+    "input": {
+      "email": "ok@mail.com",
+      "password": "pw"
+    },
+    "output": {
+      "id": 1,
+      "email": "ok@mail.com",
+      "password": "hashed"
+    }
+  },
+  {
+    "name": "login_invalid_input",
+    "input": {
+      "id": null,
+      "email": null
+    },
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "Invalid user input",
+      "errors": []
+    }
+  },
+  {
+    "name": "login_success",
+    "input": {
+      "id": 5,
+      "email": "a@mail.com"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "access_token": "mocked-token",
+        "refresh_token": "mocked-token"
+      },
+      "message": "Login successful",
+      "errors": []
+    }
+  },
+  {
+    "name": "forgotPassword_missing_email",
+    "input": "",
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "Email is required",
+      "errors": []
+    }
+  },
+  {
+    "name": "forgotPassword_user_not_found",
+    "input": "no@mail.com",
+    "output": {
+      "success": false,
+      "data": {},
+      "message": "User not found",
+      "errors": [
+        "no@mail.com"
+      ]
+    }
+  },
+  {
+    "name": "forgotPassword_success",
+    "input": "ok@mail.com",
+    "output": {
+      "success": true,
+      "data": {
+        "data": {
+          "email": "ok@mail.com"
+        },
+        "message": "OTP sent to email , forget password, expires in 1 hours",
+        "expires_at": "2025-05-02T07:42:55.204Z"
+      },
+      "message": "OTP sent to email",
+      "errors": []
+    }
+  }
+]

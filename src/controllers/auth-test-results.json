@@ -1,0 +1,199 @@
+[
+  {
+    "name": "register_valid",
+    "input": {
+      "username": "user",
+      "email": "e@mail.com",
+      "password": "password"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "username": "user"
+      },
+      "message": "Registered"
+    },
+    "passed": true
+  },
+  {
+    "name": "register_invalid",
+    "input": {
+      "username": "",
+      "email": "invalid-email",
+      "password": ""
+    },
+    "output": "Invalid input",
+    "passed": false
+  },
+  {
+    "name": "register_missing",
+    "input": {
+      "email": "e@mail.com"
+    },
+    "output": "Missing fields",
+    "passed": false
+  },
+  {
+    "name": "login_valid",
+    "input": {
+      "id": 1,
+      "email": "e@mail.com"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "access_token": "a",
+        "refresh_token": "r"
+      },
+      "message": "Logged in"
+    },
+    "passed": true
+  },
+  {
+    "name": "login_invalid",
+    "input": {
+      "id": null,
+      "email": ""
+    },
+    "output": "Invalid input",
+    "passed": false
+  },
+  {
+    "name": "login_missing",
+    "input": {},
+    "output": "Missing fields",
+    "passed": false
+  },
+  {
+    "name": "forgotPassword_valid",
+    "input": "e@mail.com",
+    "output": {
+      "success": true,
+      "data": {
+        "email": "e@mail.com"
+      },
+      "message": "OTP sent"
+    },
+    "passed": true
+  },
+  {
+    "name": "forgotPassword_invalid",
+    "input": "invalid-email",
+    "output": "Invalid email",
+    "passed": false
+  },
+  {
+    "name": "forgotPassword_missing",
+    "input": {},
+    "output": "Missing email",
+    "passed": false
+  },
+  {
+    "name": "verifyOtp_valid",
+    "input": {
+      "email": "e@mail.com",
+      "otp": "123456",
+      "new_password": "newpassword"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "message": "Verified"
+      },
+      "message": "OTP verified"
+    },
+    "passed": true
+  },
+  {
+    "name": "verifyOtp_invalid",
+    "input": {
+      "email": "",
+      "otp": "invalid",
+      "new_password": ""
+    },
+    "output": "Invalid input",
+    "passed": false
+  },
+  {
+    "name": "verifyOtp_missing",
+    "input": {
+      "email": "e@mail.com"
+    },
+    "output": "Missing fields",
+    "passed": false
+  },
+  {
+    "name": "refreshToken_valid",
+    "input": {
+      "user": {
+        "id": 1,
+        "email": "e@mail.com"
+      },
+      "dto": {
+        "refreshToken": "valid-refresh-token"
+      }
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "token": "newtoken"
+      },
+      "message": "Refreshed"
+    },
+    "passed": true
+  },
+  {
+    "name": "refreshToken_invalid",
+    "input": {
+      "user": {
+        "id": 1,
+        "email": "e@mail.com"
+      },
+      "dto": {
+        "refreshToken": ""
+      }
+    },
+    "output": "Invalid refresh token",
+    "passed": false
+  },
+  {
+    "name": "refreshToken_missing",
+    "input": {
+      "user": {
+        "id": 1,
+        "email": "e@mail.com"
+      },
+      "dto": {}
+    },
+    "output": "Missing refresh token",
+    "passed": false
+  },
+  {
+    "name": "logout_valid",
+    "input": {
+      "refresh_token": "valid-refresh-token"
+    },
+    "output": {
+      "success": true,
+      "data": {
+        "message": "Logged out"
+      },
+      "message": "Logout"
+    },
+    "passed": true
+  },
+  {
+    "name": "logout_invalid",
+    "input": {
+      "refresh_token": ""
+    },
+    "output": "Invalid refresh token",
+    "passed": false
+  },
+  {
+    "name": "logout_missing",
+    "input": {},
+    "output": "Missing refresh token",
+    "passed": false
+  }
+]

@@ -1,99 +1,226 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
+import { AuthController } from '../controllers/auth.controller';
 import { UserService } from '../services/user.service';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterDto } from 'src/dto/user/register.dto';
-import { ForgotPasswordDto } from 'src/dto/user/forgot-password.dto';
-import { LoginDto } from 'src/dto/user/login.dto';
-import { RefreshTokenDto } from 'src/dto/user/refresh-token.dto';
-import { VerifyOtpDto } from 'src/dto/user/verify-otp.dto';
+import { RegisterDto } from '../dto/user/register.dto';
+import { LoginDto } from '../dto/user/login.dto';
+import { ForgotPasswordDto } from '../dto/user/forgot-password.dto';
+import { VerifyOtpDto } from '../dto/user/verify-otp.dto';
+import { RefreshTokenDto } from '../dto/user/refresh-token.dto';
+import * as fs from 'fs';
+
+declare const jest: any;
+
+type OutputData = { api: string; input: any; result?: any; status: string };
+const outputsDir = './__tests__/outputs';
+const aggregateFile = `${outputsDir}/auth_aggregate_results.json`;
+if (!fs.existsSync(outputsDir)) fs.mkdirSync(outputsDir, { recursive: true });
+let aggregateResults: OutputData[] = [];
+function collectOutput(data: OutputData) { aggregateResults.push(data); }
+afterAll(() => { fs.writeFileSync(aggregateFile, JSON.stringify(aggregateResults, null, 2)); });
+
+// Mock UserService
+const mockUserService = () => ({
+  register: jest.fn(),
+  login: jest.fn(),
+  forgotPassword: jest.fn(),
+  verifyOtp: jest.fn(),
+  refreshToken: jest.fn(),
+  logout: jest.fn(),
+});
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let userService: jest.Mocked<UserService>;
+  let userService: ReturnType<typeof mockUserService>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
-      providers: [
-        {
-          provide: UserService,
-          useValue: {
-            register: jest.fn(),
-            login: jest.fn(),
-            forgotPassword: jest.fn(),
-            verifyOtp: jest.fn(),
-            refreshToken: jest.fn(),
-            logout: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+  beforeEach(() => {
+    userService = mockUserService();
+    controller = new AuthController(userService as unknown as UserService);
+    jest.clearAllMocks();
+  });
+// ---------------------------------------------------------------------------------------------
+// register test 
+// ---------------------------------------------------------------------------------------------
+  describe('register', () => {
+    it('good value', async () => {
+      const dto: RegisterDto = { email: 'test@example.com', password: 'pass123', username: 'testuser' };
+      const expected = { id: 1, ...dto };
+      userService.register.mockResolvedValue(expected);
 
-    controller = module.get<AuthController>(AuthController);
-    userService = module.get<UserService>(UserService) as jest.Mocked<UserService>;
+      const result = await controller.register(dto);
+      collectOutput({ api: 'register', input: dto, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
+
+    it('missing value', async () => {
+      const dto = { email: '' } as any;
+      userService.register.mockRejectedValue(new Error('Missing fields'));
+
+      await expect(controller.register(dto)).rejects.toThrow();
+      collectOutput({ api: 'register', input: dto, status: 'missing' });
+    });
+
+    it('bad value', async () => {
+      const dto: RegisterDto = { email: 'bad', password: '123', username: 'baduser' };
+      userService.register.mockRejectedValue(new Error('Invalid data'));
+
+      await expect(controller.register(dto)).rejects.toThrow();
+      collectOutput({ api: 'register', input: dto, status: 'bad' });
+    });
+  });
+  // --------------------------------------------------------------------------------------------
+  // login test
+  // --------------------------------------------------------------------------------------------
+
+  describe('login', () => {
+    it('good value', async () => {
+      const dto: LoginDto = { email: 'user@example.com', password: 'pass' };
+      const req = { user: { id: 1, email: dto.email } };
+      const expected = { accessToken: 'token' };
+      userService.login.mockResolvedValue(expected);
+
+      const result = await controller.login(req as any, dto);
+      collectOutput({ api: 'login', input: { user: req.user }, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
+
+    it('missing value', async () => {
+      const req = {} as any;
+      const result = await controller.login(req, {} as any);
+      collectOutput({ api: 'login', input: {}, status: 'missing' });
+      expect(result).toBeUndefined();
+    });
+
+    it('bad value', async () => {
+      const dto: LoginDto = { email: 'user@example.com', password: 'wrong' };
+      const req = { user: { id: 1 } };
+      userService.login.mockRejectedValue(new Error('Unauthorized'));
+
+      await expect(controller.login(req as any, dto)).rejects.toThrow();
+      collectOutput({ api: 'login', input: { user: req.user }, status: 'bad' });
+    });
   });
 
-  it('should register a user successfully', async () => {
-    const dto: RegisterDto = { email: 'test@example.com', password: 'password123' };
-    const result = { id: 1, email: 'test@example.com' };
-    userService.register.mockResolvedValue(result);
+  // -------------------------------------------------------------------------------------------
+  // forgotPassword test
+  // --------------------------------------------------------------------------------------------
 
-    const response = await controller.register(dto);
+  describe('forgotPassword', () => {
+    it('good value', async () => {
+      const dto: ForgotPasswordDto = { email: 'user2@example.com' };
+      const expected = { message: 'OTP sent' };
+      userService.forgotPassword.mockResolvedValue(expected);
 
-    expect(response).toEqual(result);
-    expect(userService.register).toHaveBeenCalledWith(dto);
+      const result = await controller.forgotPassword(dto);
+      collectOutput({ api: 'forgotPassword', input: dto, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
+
+    it('missing value', async () => {
+      const dto = { } as any;
+      userService.forgotPassword.mockRejectedValue(new Error('Missing email'));
+
+      await expect(controller.forgotPassword(dto)).rejects.toThrow();
+      collectOutput({ api: 'forgotPassword', input: dto, status: 'missing' });
+    });
+
+    it('bad value', async () => {
+      const dto: ForgotPasswordDto = { email: 'invalid' };
+      userService.forgotPassword.mockRejectedValue(new Error('User not found'));
+
+      await expect(controller.forgotPassword(dto)).rejects.toThrow();
+      collectOutput({ api: 'forgotPassword', input: dto, status: 'bad' });
+    });
   });
 
-  it('should throw an error if required fields are missing during registration', async () => {
-    const dto: RegisterDto = { email: '', password: '' };
-    userService.register.mockRejectedValue(new HttpException('Validation failed', HttpStatus.BAD_REQUEST));
+  // -------------------------------------------------------------------------------------------
+  // verifyOtp test
+  // --------------------------------------------------------------------------------------------
 
-    await expect(controller.register(dto)).rejects.toThrow(HttpException);
-    expect(userService.register).toHaveBeenCalledWith(dto);
+  describe('verifyOtp', () => {
+    it('good value', async () => {
+      const dto: VerifyOtpDto = { email: 'user3@example.com', otp: '1234', new_password: 'newpass' };
+      const expected = { message: 'Password reset' };
+      userService.verifyOtp.mockResolvedValue(expected);
+
+      const result = await controller.verifyOtp(dto);
+      collectOutput({ api: 'verifyOtp', input: dto, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
+
+    it('missing value', async () => {
+      const dto = { email: 'user@example.com' } as any;
+      userService.verifyOtp.mockRejectedValue(new Error('Missing fields'));
+
+      await expect(controller.verifyOtp(dto)).rejects.toThrow();
+      collectOutput({ api: 'verifyOtp', input: dto, status: 'missing' });
+    });
+
+    it('bad value', async () => {
+      const dto: VerifyOtpDto = { email: 'user3@example.com', otp: '0000', new_password: 'newpass' };
+      userService.verifyOtp.mockRejectedValue(new Error('Invalid OTP'));
+
+      await expect(controller.verifyOtp(dto)).rejects.toThrow();
+      collectOutput({ api: 'verifyOtp', input: dto, status: 'bad' });
+    });
+  });
+  // -------------------------------------------------------------------------------------------
+  // refreshToken test
+  // --------------------------------------------------------------------------------------------
+
+  describe('refreshToken', () => {
+    it('good value', async () => {
+      const dto: RefreshTokenDto = { refreshToken: 'refresh123' };
+      const req = {} as any;
+      const expected = { accessToken: 'newtoken' };
+      userService.refreshToken.mockResolvedValue(expected);
+
+      const result = await controller.refreshToken(req, dto);
+      collectOutput({ api: 'refreshToken', input: {}, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
+
+    it('missing value', async () => {
+      const result = await controller.refreshToken({} as any, {} as any);
+      collectOutput({ api: 'refreshToken', input: {}, status: 'missing' });
+      expect(result).toBeUndefined();
+    });
+
+    it('bad value', async () => {
+      const dto: RefreshTokenDto = { refreshToken: 'invalid' };
+      userService.refreshToken.mockRejectedValue(new Error('Invalid token'));
+
+      await expect(controller.refreshToken({} as any, dto)).rejects.toThrow();
+      collectOutput({ api: 'refreshToken', input: {}, status: 'bad' });
+    });
   });
 
-  it('should login a user successfully', async () => {
-    const req = { user: { id: 1, email: 'test@example.com' } };
-    const result = { accessToken: 'token', refreshToken: 'refreshToken' };
-    userService.login.mockResolvedValue(result);
+  // -------------------------------------------------------------------------------------------
+  // logout test
+  // --------------------------------------------------------------------------------------------
+  describe('logout', () => {
+    it('good value', async () => {
+      const dto = { refreshToken: 'refresh456' };
+      const expected = { message: 'Logged out' };
+      userService.logout.mockResolvedValue(expected);
 
-    const response = await controller.login(req as any);
+      const result = await controller.logout(dto);
+      collectOutput({ api: 'logout', input: dto, result, status: 'good' });
+      expect(result).toEqual(expected);
+    });
 
-    expect(response).toEqual(result);
-    expect(userService.login).toHaveBeenCalledWith(req.user);
-  });
+    it('missing value', async () => {
+      const dto = {} as any;
+      userService.logout.mockRejectedValue(new Error('Missing token'));
 
-  it('should throw an error if data type is incorrect during login', async () => {
-    const req = { user: { id: 'invalid_id', email: 'test@example.com' } };
-    userService.login.mockRejectedValue(new HttpException('Invalid data type', HttpStatus.BAD_REQUEST));
+      await expect(controller.logout(dto)).rejects.toThrow();
+      collectOutput({ api: 'logout', input: dto, status: 'missing' });
+    });
 
-    await expect(controller.login(req as any)).rejects.toThrow(HttpException);
-    expect(userService.login).toHaveBeenCalledWith(req.user);
-  });
+    it('bad value', async () => {
+      const dto = { refreshToken: 'invalid' };
+      userService.logout.mockRejectedValue(new Error('Logout failed'));
 
-  it('should throw an error if token is invalid during refresh token', async () => {
-    const dto: RefreshTokenDto = { refresh_token: 'invalid.token' };
-    const req = { user: { id: 1 } };
-    userService.refreshToken.mockRejectedValue(new HttpException('Invalid token', HttpStatus.UNAUTHORIZED));
-
-    await expect(controller.refreshToken(req as any, dto)).rejects.toThrow(HttpException);
-    expect(userService.refreshToken).toHaveBeenCalledWith(req, dto);
-  });
-
-  it('should throw an error if OTP verification fails', async () => {
-    const dto: VerifyOtpDto = { email: 'test@example.com', otp: 'wrong_otp', new_password: 'newpassword' };
-    userService.verifyOtp.mockRejectedValue(new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST));
-
-    await expect(controller.verifyOtp(dto)).rejects.toThrow(HttpException);
-    expect(userService.verifyOtp).toHaveBeenCalledWith(dto.email, dto.otp, dto.new_password);
-  });
-
-  it('should throw an error if trying to logout with an invalid token', async () => {
-    const dto = { refresh_token: 'invalid.token' };
-    userService.logout.mockRejectedValue(new HttpException('Invalid token', HttpStatus.UNAUTHORIZED));
-
-    await expect(controller.logout(dto)).rejects.toThrow(HttpException);
-    expect(userService.logout).toHaveBeenCalledWith(dto);
+      await expect(controller.logout(dto)).rejects.toThrow();
+      collectOutput({ api: 'logout', input: dto, status: 'bad' });
+    });
   });
 });
